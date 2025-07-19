@@ -1,0 +1,27 @@
+---
+- name: Update system and notify via Discord
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Update APT cache
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Perform dist-upgrade
+      ansible.builtin.apt:
+        upgrade: dist
+        autoremove: yes
+        autoclean: yes
+
+    - name: Send Discord notification
+      ansible.builtin.uri:
+        url: "{{ DISCORD_WEBHOOK }}"
+        method: POST
+        headers:
+          Content-Type: "application/json"
+        body_format: json
+        body:
+          content: ":white_check_mark: Aktualizace **{{ inventory_hostname }}** úspěšně provedena v čase: {{ ansible_date_time.iso8601 }}."
+      delegate_to: localhost
