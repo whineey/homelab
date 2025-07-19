@@ -30,7 +30,14 @@
           Content-Type: "application/json"
         body_format: json
         body:
-          content: ":white_check_mark: Update complete on all hosts at {{ ansible_date_time.iso8601 }}."
+          content: |
+            ✅ **Update complete**
+            Aktualizované stroje:
+            {% for host in play_hosts %}
+            • `{{ host }}`
+            {% endfor %}
+            Čas: {{ ansible_date_time.iso8601 }}
+        status_code: 204
       delegate_to: 127.0.0.1
       run_once: true
       become: false
