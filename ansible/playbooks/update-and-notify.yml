@@ -2,9 +2,7 @@
 - name: Update system and notify via Discord
   hosts: all
   become: yes
-  vars:
-    discord_message: ":white_check_mark: Aktualizace **{{ inventory_hostname }}** úspěšně provedena v čase: {{ ansible_date_time.iso8601 }}."
-
+  
   tasks:
     - name: Update system (Debian-based)
       ansible.builtin.apt:
@@ -32,5 +30,8 @@
           Content-Type: "application/json"
         body_format: json
         body:
-          content: "{{ discord_message }}"
-      delegate_to: localhost
+          content: ":white_check_mark: Update complete on all hosts at {{ ansible_date_time.iso8601 }}."
+      delegate_to: 127.0.0.1
+      run_once: true
+      become: false
+
