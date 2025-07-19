@@ -31,7 +31,7 @@
         body_format: json
         body:
           content: |
-            ✅ **Update complete**
+            ✅ **Aktualizace úspěšná**
             Aktualizované stroje:
             {% for host in play_hosts %}
             • `{{ host }}`
