@@ -22,12 +22,6 @@
       ansible.builtin.command: dnf autoremove -y
       when: ansible_os_family == "RedHat"
 
-    - name: Get current local time
-      set_fact:
-        current_local_time: "{{ lookup('pipe', 'date +\"%d. %m. %Y, %H:%M:%S\"') }}"
-      run_once: true
-      delegate_to: 127.0.0.1
-
     - name: Send Discord notification
       ansible.builtin.uri:
         url: "{{ DISCORD_WEBHOOK }}"
@@ -42,7 +36,6 @@
             {% for host in play_hosts %}
             • `{{ host }}`
             {% endfor %}
-            Čas: **{{ current_local_time }}**
         status_code: 204
       delegate_to: 127.0.0.1
       run_once: true
