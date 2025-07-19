@@ -2,18 +2,27 @@
 - name: Update system and notify via Discord
   hosts: all
   become: yes
+  vars:
+    discord_message: ":white_check_mark: Aktualizace **{{ inventory_hostname }}** úspěšně provedena v čase: {{ ansible_date_time.iso8601 }}."
 
   tasks:
-    - name: Update APT cache
+    - name: Update system (Debian-based)
       ansible.builtin.apt:
         update_cache: yes
-        cache_valid_time: 3600
-
-    - name: Perform dist-upgrade
-      ansible.builtin.apt:
         upgrade: dist
         autoremove: yes
         autoclean: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Update system (RHEL-based)
+      ansible.builtin.dnf:
+        name: '*'
+        state: latest
+      when: ansible_os_family == "RedHat"
+
+    - name: Clean packages (RHEL-based)
+      ansible.builtin.command: dnf autoremove -y
+      when: ansible_os_family == "RedHat"
 
     - name: Send Discord notification
       ansible.builtin.uri:
@@ -23,5 +32,5 @@
           Content-Type: "application/json"
         body_format: json
         body:
-          content: ":white_check_mark: Aktualizace **{{ inventory_hostname }}** úspěšně provedena v čase: {{ ansible_date_time.iso8601 }}."
+          content: "{{ discord_message }}"
       delegate_to: localhost
