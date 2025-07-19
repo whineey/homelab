@@ -36,7 +36,7 @@
             {% for host in play_hosts %}
             • `{{ host }}`
             {% endfor %}
-            Čas: {{ ansible_date_time.iso8601 }}
+            Čas: **{{ ansible_date_time.iso8601 }}**
         status_code: 204
       delegate_to: 127.0.0.1
       run_once: true
