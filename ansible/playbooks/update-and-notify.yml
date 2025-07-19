@@ -24,7 +24,7 @@
 
     - name: Get current local time
       set_fact:
-        current_local_time: "{{ lookup('pipe', 'date +%d. %m. %YT, %H:%M:%S') }}"
+        current_local_time: "{{ lookup('pipe', 'date +\"%d. %m. %Y, %H:%M:%S\"') }}"
       run_once: true
       delegate_to: 127.0.0.1
 
